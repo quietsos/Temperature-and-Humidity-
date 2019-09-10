@@ -1,0 +1,69 @@
+#include<LiquidCrystal.h>;
+#include<dht.h>
+dht DHT;
+
+#define dht11_Pin 8
+int check;
+float hum;
+float temp;
+
+const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+//const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+
+LiquidCrystal lcd(rs,en,d4,d5,d6,d7);
+
+void calculate_Temp(void);
+void showData(void); 
+void lcdPrint(void);
+
+void setup() 
+{   
+    lcd.begin(40,2);
+    Serial.begin(9600);
+  
+}
+
+void loop() 
+{
+  calculate_Temp();
+  showData();
+  lcdPrint();
+   
+}
+
+void calculate_Temp(void)
+{
+    check = DHT.read11(dht11_Pin);
+    temp = DHT.temperature;
+    hum = DHT.humidity;
+}
+
+void showData(void)
+{
+
+  Serial.print("Temperature : ");
+  Serial.print(temp);
+  Serial.print(" c");
+  Serial.print("  Humidity : ");
+  Serial.print(hum);
+  Serial.println(" %");
+ 
+}
+
+void lcdPrint(void)
+{
+
+  lcd.setCursor(1,0);
+  lcd.print("ICT_Innovation_Lab  Humidity:");
+  lcd.print(hum);
+  lcd.print("%");
+
+  
+  lcd.setCursor(0,1);
+  lcd.print(" Temperature:");
+  lcd.print(temp);
+  lcd.print("c");
+  
+  delay(1000);
+  
+}
